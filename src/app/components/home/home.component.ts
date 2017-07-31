@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as noble from 'noble';
 
 @Component({
   selector: 'app-home',
@@ -7,10 +8,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   title = `App works !`;
+  count = 0;
 
   constructor() { }
 
   ngOnInit() {
+    noble.on('stateChange', state => {
+      if (state !== 'poweredOn') return;
+
+      noble.startScanning();
+      noble.on('discover', (peripheral) => {
+        console.log('discovered', peripheral)
+        this.count += 1;
+      });
+    })
   }
 
 }
